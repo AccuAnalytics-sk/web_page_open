@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="sk">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="author" content="Martin Višňovský | AccuAnalytics">
+  <meta name="description" content="AccuAnalytics — dátové konzultácie, analytika, dátová architektúra, integrácie a externé kapacity pre dátové projekty. Doplnkovo školenia SQL, Excel a Data Analytics.">
+  <meta name="theme-color" content="#016345">
+  <meta property="og:title" content="AccuAnalytics | Data & Technology Consulting">
+  <meta property="og:description" content="Dátové konzultácie, architektúra, analytika, integrácie a flexibilná externá kapacita pre vaše projekty.">
+  <meta property="og:type" content="website">
+  <title>AccuAnalytics | Data &amp; Technology Consulting</title>
+  <!-- Typografia: moderný sans-serif vzhľad s Inter ako primárnym fontom. -->
+
+  <!-- Moderné bezpätkové písmo: Inter je primárny font, Roboto náhradný. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;650;700;750;800;850;900&family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <!-- Ikony: Font Awesome sa načítava externe; stránka funguje aj bez neho. -->
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    /* ================================================================
+       ZÁKLADNÁ PALETA — zachované zelené farby z pôvodného návrhu.
+       Pri úprave vizuálu stačí meniť premenné v :root / .dark-theme.
+       ================================================================ */
+    :root {
+      --brand-green: #0cc844;
+      --brand-green-dark: #016345;
+      --brand-main: var(--brand-green-dark);
+      --brand-main-second: var(--brand-green);
+      --bg-body: #E0E0E0;
+      --bg-card: #ffffff;
+      --bg-soft: #f4f8f5;
+      --bg-icon: #ecfdf5;
+      --text-main: #111827;
+      --text-sub: #4b5563;
+      --text-desc: #374151;
+      --border: #e5e7eb;
+      --shadow: 0 18px 50px rgba(15, 39, 28, .08);
+      --radius: 20px;
+      --content-width: 1160px;
+      /* Primárny font Inter; Roboto, Segoe UI a Arial sú záložné bezpätkové fonty. */
+      --font-sans: "Inter", "Roboto", "Segoe UI", Arial, sans-serif;
+    }
+
+    .dark-theme {
+      --brand-main: var(--brand-green);
+      --brand-main-second: var(--brand-green-dark);
+      --bg-body: #1b1e1b;
+      --bg-card: #182119;
+      --bg-soft: #202d24;
+      --bg-icon: #064e3b;
+      --text-main: #ecfdf5;
+      --text-sub: #a5b2c4;
+      --text-desc: #d5dee8;
+      --border: #2b3b31;
+      --shadow: 0 18px 50px rgba(0, 0, 0, .24);
+    }
+
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: 90px; }
+    body {
+      margin: 0;
+      background: var(--bg-body);
+      color: var(--text-main);
+      font-family: var(--font-sans);
+      font-optical-sizing: auto;
+      font-feature-settings: "cv11", "ss01";
+      text-rendering: optimizeLegibility;
+      line-height: 1.65;
+      transition: background .25s ease, color .25s ease;
+    }
+    /* Všetky prvky dedia moderné bezpätkové písmo vrátane formulárových polí. */
+    body, button, input, select, textarea { font-family: var(--font-sans); }
+    a { color: inherit; }
+    h1, h2, h3, h4, p, a, label, li, span, strong, small, em, summary { font-family: inherit; }
+    button { font: inherit; }
+    .container { width: min(var(--content-width), calc(100% - 40px)); margin-inline: auto; }
+    .muted { color: var(--text-sub); }
+    .accent { color: var(--brand-main); }
+    .eyebrow {
+      display: inline-flex; align-items: center; gap: 9px;
+      color: var(--brand-main); font-size: .78rem; font-weight: 800;
+      letter-spacing: .14em; text-transform: uppercase;
+    }
+    .eyebrow::before { content: ""; width: 24px; height: 2px; background: var(--brand-green); }
+    .section { padding: 92px 0; }
+    .section-heading { max-width: 720px; margin: 0 auto 44px; text-align: center; }
+    .section-heading h2 { margin: 12px 0 12px; font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1.15; letter-spacing: -.045em; }
+    .section-heading p { margin: 0; color: var(--text-sub); font-size: 1.04rem; }
+    .section-title-left { max-width: 680px; margin-bottom: 36px; }
+    .section-title-left h2 { margin: 12px 0; font-size: clamp(2rem, 4vw, 2.7rem); line-height: 1.15; letter-spacing: -.045em; }
+    .section-title-left p { color: var(--text-sub); margin: 0; }
+
+    /* Navigácia, prepínače jazyka a vzhľadu */
+    .site-header {
+      position: sticky; top: 0; z-index: 1000;
+      background: color-mix(in srgb, var(--bg-card) 91%, transparent);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(18px);
+    }
+    .nav-wrap { min-height: 76px; display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 11px; text-decoration: none; min-width: max-content; }
+    .brand-mark {
+      width: 42px; height: 42px; display: grid; place-items: center;
+      border-radius: 13px; color: #fff; font-weight: 900; letter-spacing: -.08em;
+      background: linear-gradient(135deg, var(--brand-green) 0%, var(--brand-green-dark) 100%);
+      box-shadow: 0 7px 18px rgba(1, 99, 69, .20);
+    }
+    .brand-name { font-size: 1.08rem; font-weight: 850; letter-spacing: -.035em; line-height: 1.1; }
+    .brand-sub { display: block; margin-top: 3px; color: var(--text-sub); font-size: .62rem; letter-spacing: .12em; text-transform: uppercase; font-weight: 750; }
+    .main-nav { display: flex; align-items: center; gap: clamp(14px, 2vw, 27px); }
+    .main-nav a { text-decoration: none; color: var(--text-sub); font-size: .88rem; font-weight: 650; transition: color .2s ease; }
+    .main-nav a:hover { color: var(--brand-main); }
+    .nav-actions { display: flex; align-items: center; gap: 8px; }
+    .icon-button, .lang-button, .menu-button {
+      min-width: 40px; height: 40px; border: 1px solid var(--border); border-radius: 12px;
+      color: var(--text-main); background: var(--bg-card); cursor: pointer; transition: .2s ease;
+    }
+    .icon-button:hover, .lang-button:hover, .menu-button:hover { border-color: var(--brand-green); color: var(--brand-main); }
+    .lang-switch { display: flex; gap: 4px; padding: 3px; border: 1px solid var(--border); border-radius: 13px; background: var(--bg-card); }
+    .lang-button { min-width: 34px; height: 32px; border: 0; background: transparent; font-size: .75rem; font-weight: 850; }
+    .lang-button.active { color: #fff; background: var(--brand-main); }
+    .menu-button { display: none; width: 42px; font-size: 1rem; }
+
+    /* Hero */
+    .hero { position: relative; overflow: hidden; padding: 92px 0 76px; }
+    .hero::before, .hero::after { content: ""; position: absolute; z-index: -1; border-radius: 50%; filter: blur(2px); pointer-events: none; }
+    .hero::before { width: 480px; height: 480px; right: -170px; top: -230px; background: radial-gradient(circle, rgba(12,200,68,.17), rgba(12,200,68,0) 70%); }
+    .hero::after { width: 420px; height: 420px; left: -250px; bottom: -240px; background: radial-gradient(circle, rgba(1,99,69,.12), rgba(1,99,69,0) 70%); }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr); gap: 60px; align-items: center; }
+    .hero h1 { max-width: 790px; margin: 18px 0 22px; font-size: clamp(2.8rem, 6vw, 5.15rem); line-height: 1.01; letter-spacing: -.065em; }
+    .hero h1 span { color: var(--brand-main); }
+    .hero-copy { max-width: 690px; color: var(--text-sub); font-size: clamp(1.04rem, 1.6vw, 1.18rem); }
+    .hero-ctas { display: flex; flex-wrap: wrap; gap: 13px; margin-top: 30px; }
+    .button {
+      display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+      min-height: 49px; padding: 12px 21px; border: 1px solid transparent; border-radius: 999px;
+      text-decoration: none; font-weight: 780; font-size: .92rem; cursor: pointer; transition: transform .2s ease, box-shadow .2s ease, background .2s ease;
+    }
+    .button:hover { transform: translateY(-2px); }
+    .button-primary { color: #fff; background: var(--brand-main); box-shadow: 0 10px 22px rgba(1,99,69,.18); }
+    .button-primary:hover { background: #014c36; box-shadow: 0 14px 28px rgba(1,99,69,.25); }
+    .button-outline { color: var(--brand-main); border-color: var(--brand-main); background: transparent; }
+    .button-outline:hover { color: #fff; background: var(--brand-main); }
+    .hero-note { display: flex; align-items: center; gap: 12px; margin-top: 35px; color: var(--text-sub); font-size: .88rem; }
+    .hero-note .dot { width: 9px; height: 9px; border-radius: 50%; background: var(--brand-green); box-shadow: 0 0 0 6px rgba(12,200,68,.12); }
+    .hero-card {
+      position: relative; padding: 30px; border: 1px solid var(--border); border-radius: 26px;
+      background: var(--bg-card); box-shadow: var(--shadow); transform: rotate(1.5deg);
+    }
+    .hero-card::before { content: ""; position: absolute; inset: 12px -12px -12px 12px; z-index: -1; border-radius: 26px; border: 1px solid rgba(12,200,68,.3); }
+    .hero-card-top { display: flex; align-items: center; justify-content: space-between; padding-bottom: 22px; border-bottom: 1px solid var(--border); }
+    .hero-card-label { font-size: .76rem; color: var(--text-sub); font-weight: 750; letter-spacing: .1em; text-transform: uppercase; }
+    .hero-card-icon { width: 45px; height: 45px; display: grid; place-items: center; color: var(--brand-main); background: var(--bg-icon); border-radius: 14px; font-size: 1.2rem; }
+    .hero-stat { padding: 24px 0 18px; }
+    .hero-stat strong { display: block; color: var(--brand-main); font-size: 3.7rem; line-height: 1; letter-spacing: -.07em; }
+    .hero-stat span { color: var(--text-sub); font-size: .92rem; }
+    .hero-tags { display: flex; flex-wrap: wrap; gap: 8px; padding-top: 20px; border-top: 1px solid var(--border); }
+    .tag { display: inline-flex; padding: 7px 10px; border-radius: 8px; color: var(--text-desc); background: var(--bg-soft); font-size: .74rem; font-weight: 700; }
+
+    /* Pás s dôveryhodnosťou */
+    .proof-strip { padding: 21px 0; background: var(--brand-main); color: #fff; }
+    .proof-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+    .proof-item { display: flex; align-items: center; justify-content: center; gap: 12px; text-align: left; }
+    .proof-item i { color: var(--brand-green); font-size: 1.25rem; }
+    .proof-item strong { display: block; font-size: .96rem; }
+    .proof-item span { display: block; color: rgba(255,255,255,.72); font-size: .76rem; }
+
+    /* Modely spolupráce: hlavná ponuka (konzultácie, projektová pomoc, externá kapacita). */
+    .engagement-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin: 0 0 38px; }
+    .engagement-card {
+      display: flex; flex-direction: column; align-items: flex-start; min-height: 250px;
+      padding: 25px; border: 1px solid var(--border); border-radius: var(--radius);
+      background: linear-gradient(155deg, var(--bg-card), var(--bg-soft));
+      box-shadow: 0 8px 30px rgba(15,39,28,.035);
+    }
+    .engagement-card .service-icon { flex: 0 0 auto; }
+    .engagement-card h3 { margin: 17px 0 8px; font-size: 1.12rem; line-height: 1.3; }
+    .engagement-card p { margin: 0 0 18px; color: var(--text-sub); font-size: .9rem; flex: 1; }
+    .engagement-card .text-link { color: var(--brand-main); text-decoration: none; font-size: .84rem; font-weight: 800; }
+    .engagement-card .text-link:hover { text-decoration: underline; }
+    .expertise-heading { margin: 0 0 19px; color: var(--text-sub); font-size: .86rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+
+    /* Karty odborných služieb */
+    .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .service-card, .project-card, .training-card, .contact-card {
+      border: 1px solid var(--border); border-radius: var(--radius); background: var(--bg-card); box-shadow: 0 8px 30px rgba(15,39,28,.035);
+    }
+    .service-card { padding: 27px; transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease; }
+    .service-card:hover { transform: translateY(-5px); border-color: rgba(12,200,68,.6); box-shadow: var(--shadow); }
+    .service-icon { width: 49px; height: 49px; display: grid; place-items: center; border-radius: 15px; color: var(--brand-main); background: var(--bg-icon); font-size: 1.2rem; }
+    .service-card h3 { margin: 19px 0 8px; font-size: 1.12rem; line-height: 1.3; }
+    .service-card p { color: var(--text-sub); margin: 0 0 15px; font-size: .91rem; }
+    .service-card ul { padding-left: 18px; margin: 0; color: var(--text-desc); font-size: .85rem; }
+    .service-card li { margin: 5px 0; }
+
+    /* O mne / prístup */
+    .about-section { background: var(--bg-card); border-block: 1px solid var(--border); }
+    .about-grid { display: grid; grid-template-columns: .9fr 1.1fr; gap: 64px; align-items: start; }
+    .about-panel { padding: 30px; border-radius: 24px; background: linear-gradient(145deg, var(--brand-main), #013d2c); color: #fff; }
+    .about-panel .eyebrow { color: #a5f3bd; }
+    .about-panel h3 { margin: 15px 0 11px; font-size: 1.7rem; line-height: 1.2; }
+    .about-panel p { color: rgba(255,255,255,.8); margin: 0; }
+    .about-points { display: grid; gap: 17px; }
+    .about-point { display: grid; grid-template-columns: 40px 1fr; gap: 14px; }
+    .about-point i { width: 40px; height: 40px; display: grid; place-items: center; border-radius: 12px; color: var(--brand-main); background: var(--bg-icon); }
+    .about-point h3 { margin: 0 0 4px; font-size: 1rem; }
+    .about-point p { margin: 0; color: var(--text-sub); font-size: .9rem; }
+    .experience-line { display: flex; flex-wrap: wrap; gap: 9px; margin-top: 28px; }
+    .experience-line span { padding: 8px 11px; border: 1px solid var(--border); border-radius: 999px; color: var(--text-sub); font-size: .78rem; font-weight: 700; }
+
+    /* Referenčné projekty */
+    .projects-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .project-card { padding: 28px; }
+    .project-meta { display: flex; justify-content: space-between; align-items: center; gap: 15px; margin-bottom: 18px; }
+    .project-type { color: var(--brand-main); background: var(--bg-icon); padding: 6px 10px; border-radius: 7px; font-size: .7rem; font-weight: 850; letter-spacing: .07em; text-transform: uppercase; }
+    .project-date { color: var(--text-sub); font-size: .78rem; font-weight: 700; white-space: nowrap; }
+    .project-card h3 { margin: 0 0 9px; font-size: 1.16rem; line-height: 1.3; }
+    .project-card p { margin: 0; color: var(--text-sub); font-size: .9rem; }
+    .project-tags { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 20px; }
+    .project-tags span { padding: 5px 8px; border-radius: 7px; background: var(--bg-soft); color: var(--text-desc); font-size: .7rem; font-weight: 700; }
+
+    /* Školenia */
+    .training-section { background: var(--bg-card); border-block: 1px solid var(--border); }
+    .training-section .section-title-left h2 { font-size: clamp(1.75rem, 3.3vw, 2.3rem); }
+    .training-intro { display: flex; align-items: end; justify-content: space-between; gap: 28px; margin-bottom: 35px; }
+    .training-intro .section-title-left { margin: 0; }
+    .price-note { display: flex; align-items: center; gap: 12px; min-width: max-content; padding: 14px 18px; border: 1px solid rgba(12,200,68,.4); border-radius: 15px; background: var(--bg-soft); }
+    .price-note strong { color: var(--brand-main); font-size: 1.6rem; letter-spacing: -.05em; }
+    .price-note span { color: var(--text-sub); font-size: .75rem; line-height: 1.25; }
+    .training-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+    .training-card { padding: 27px; display: flex; flex-direction: column; }
+    .training-card h3 { margin: 16px 0 8px; font-size: 1.2rem; }
+    .training-card p { margin: 0; color: var(--text-sub); font-size: .9rem; }
+    .training-card ul { padding-left: 18px; margin: 17px 0 25px; color: var(--text-desc); font-size: .84rem; flex: 1; }
+    .training-card li { margin: 6px 0; }
+    .training-card .button { align-self: flex-start; margin-top: auto; }
+    .training-custom { display: grid; grid-template-columns: 1.1fr .9fr; gap: 25px; align-items: center; margin-top: 23px; padding: 30px; border-radius: 22px; background: linear-gradient(125deg, #013d2c, var(--brand-main)); color: #fff; }
+    .training-custom h3 { margin: 0 0 8px; font-size: 1.35rem; }
+    .training-custom p { margin: 0; color: rgba(255,255,255,.8); font-size: .91rem; }
+    .custom-list { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; margin: 0; padding: 0; list-style: none; }
+    .custom-list li { display: flex; align-items: start; gap: 8px; font-size: .82rem; color: rgba(255,255,255,.9); }
+    .custom-list i { color: var(--brand-green); margin-top: 5px; }
+    .training-footnote { margin: 17px 0 0; color: var(--text-sub); font-size: .78rem; }
+
+    /* Kontakt */
+    .contact-layout { display: grid; grid-template-columns: .85fr 1.15fr; gap: 24px; align-items: stretch; }
+    .contact-card { padding: 30px; }
+    .contact-card.dark { color: #fff; border-color: transparent; background: linear-gradient(150deg, #013d2c, var(--brand-main)); }
+    .contact-card.dark .eyebrow { color: #a5f3bd; }
+    .contact-card.dark h2 { margin: 13px 0; font-size: 2rem; line-height: 1.15; }
+    .contact-card.dark p { color: rgba(255,255,255,.78); }
+    .contact-details { display: grid; gap: 16px; margin-top: 27px; }
+    .contact-detail { display: flex; gap: 12px; align-items: center; text-decoration: none; }
+    .contact-detail i { width: 39px; height: 39px; display: grid; place-items: center; border-radius: 11px; color: var(--brand-green); background: rgba(255,255,255,.1); }
+    .contact-detail span { display: block; color: rgba(255,255,255,.65); font-size: .72rem; }
+    .contact-detail strong { display: block; color: #fff; font-size: .91rem; font-weight: 700; }
+    .contact-form { display: grid; gap: 14px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    .form-group { display: grid; gap: 6px; }
+    .form-group label { color: var(--text-desc); font-size: .8rem; font-weight: 750; }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%; padding: 12px 13px; border: 1px solid var(--border); border-radius: 11px;
+      color: var(--text-main); background: var(--bg-soft); outline: none; font-size: .9rem;
+    }
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--brand-green); box-shadow: 0 0 0 3px rgba(12,200,68,.12); }
+    .form-group textarea { resize: vertical; min-height: 125px; }
+    .form-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 13px; }
+    .form-status { min-height: 22px; margin: 0; color: var(--brand-main); font-size: .83rem; font-weight: 700; }
+    .form-hint { color: var(--text-sub); font-size: .73rem; margin: 0; }
+
+    /* Päta */
+    .site-footer { padding: 25px 0; border-top: 1px solid var(--border); background: var(--bg-card); }
+    .footer-row { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 15px; }
+    .footer-copy { margin: 0; color: var(--text-sub); font-size: .78rem; }
+    .footer-links { display: flex; flex-wrap: wrap; gap: 17px; }
+    .footer-links a { color: var(--text-sub); text-decoration: none; font-size: .8rem; }
+    .footer-links a:hover { color: var(--brand-main); }
+
+    /* Prístupnosť, mobilné rozloženie a obmedzenie animácií */
+    a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px solid rgba(12,200,68,.65); outline-offset: 3px; }
+    @media (max-width: 980px) {
+      .main-nav { gap: 13px; }
+      .main-nav a { font-size: .8rem; }
+      .hero-grid { gap: 35px; }
+      .services-grid { grid-template-columns: repeat(2, 1fr); }
+      .engagement-grid { grid-template-columns: repeat(2, 1fr); }
+      .training-grid { grid-template-columns: repeat(2, 1fr); }
+      .training-card:last-child { grid-column: 1 / -1; }
+      .about-grid { gap: 35px; }
+    }
+    @media (max-width: 760px) {
+      .container { width: min(var(--content-width), calc(100% - 30px)); }
+      .nav-wrap { min-height: 68px; }
+      .menu-button { display: inline-grid; place-items: center; }
+      .main-nav {
+        display: none; position: absolute; left: 15px; right: 15px; top: 76px; padding: 16px;
+        align-items: stretch; flex-direction: column; gap: 0; border: 1px solid var(--border);
+        border-radius: 16px; background: var(--bg-card); box-shadow: var(--shadow);
+      }
+      .main-nav.open { display: flex; }
+      .main-nav a { padding: 11px 8px; font-size: .95rem; }
+      .hero { padding: 65px 0 58px; }
+      .hero-grid, .about-grid, .contact-layout { grid-template-columns: 1fr; }
+      .engagement-grid { grid-template-columns: 1fr; }
+      .engagement-card { min-height: 0; }
+      .hero-card { max-width: 480px; transform: none; margin: 10px auto 0; width: 100%; }
+      .proof-grid { grid-template-columns: repeat(2, 1fr); row-gap: 17px; }
+      .proof-item { justify-content: flex-start; }
+      .projects-grid { grid-template-columns: 1fr; }
+      .training-intro { display: block; }
+      .price-note { display: inline-flex; margin-top: 22px; }
+      .training-custom { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 540px) {
+      /* Kompaktnejšia hlavička, aby sa logo a prepínače zmestili aj na úzky mobil. */
+      .nav-wrap { gap: 8px; }
+      .brand-sub { display: none; }
+      .brand-mark { width: 34px; height: 34px; border-radius: 10px; }
+      .brand-name { font-size: .86rem; }
+      .nav-actions { gap: 4px; }
+      .lang-switch { gap: 0; padding: 2px; }
+      .lang-button { min-width: 24px; height: 29px; font-size: .68rem; }
+      .icon-button, .menu-button { width: 32px; min-width: 32px; height: 32px; }
+      .section { padding: 67px 0; }
+      .hero h1 { font-size: clamp(2.55rem, 13vw, 3.8rem); }
+      .hero-ctas .button { width: 100%; }
+      .services-grid, .training-grid { grid-template-columns: 1fr; }
+      .training-card:last-child { grid-column: auto; }
+      .form-row { grid-template-columns: 1fr; }
+      .proof-grid { gap: 14px 9px; }
+      .proof-item { gap: 8px; }
+      .proof-item strong { font-size: .82rem; }
+      .proof-item span { font-size: .67rem; }
+      .custom-list { grid-template-columns: 1fr; }
+      .contact-card { padding: 23px; }
+      .footer-row { align-items: flex-start; flex-direction: column; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <!-- ================================================================
+       HLAVIČKA: značka AccuAnalytics, navigácia, SK/EN a light/dark režim.
+       Názov AccuAnalytics je prevzatý z pôvodného návrhu (firemný e-mail).
+       ================================================================ -->
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#domov" aria-label="AccuAnalytics – úvod">
+        <span class="brand-mark">AA</span>
+        <span class="brand-name">AccuAnalytics<span class="brand-sub">Data &amp; Technology Consulting</span></span>
+      </a>
+
+      <nav class="main-nav" id="mainNav" aria-label="Main navigation">
+        <a href="#sluzby" data-i18n="navServices">Služby</a>
+        <a href="#skolenia" data-i18n="navTraining">Školenia</a>
+        <a href="#projekty" data-i18n="navProjects">Skúsenosti</a>
+        <a href="#o-mne" data-i18n="navAbout">O mne</a>
+        <a href="#kontakt" data-i18n="navContact">Kontakt</a>
+      </nav>
+
+      <div class="nav-actions">
+        <div class="lang-switch" role="group" aria-label="Language selector">
+          <button class="lang-button active" type="button" data-set-lang="sk" aria-pressed="true">SK</button>
+          <button class="lang-button" type="button" data-set-lang="en" aria-pressed="false">EN</button>
+        </div>
+        <button class="icon-button" type="button" id="themeBtn" aria-label="Prepnúť vzhľad" title="Prepnúť vzhľad"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+        <button class="menu-button" type="button" id="menuBtn" aria-label="Otvoriť menu" aria-expanded="false"><i class="fa-solid fa-bars" aria-hidden="true"></i></button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- HERO: stručne komunikuje hodnotu a nasmeruje návštevníka na služby alebo kontakt. -->
+    <section class="hero" id="domov">
+      <div class="container hero-grid">
+        <div>
+          <span class="eyebrow" data-i18n="heroEyebrow">Konzultácie · projektová delivery · externé kapacity</span>
+          <h1 data-i18n="heroTitle">Dátové projekty, ktoré sa <span>posúvajú dopredu.</span></h1>
+          <p class="hero-copy" data-i18n="heroText">Pomáham firmám riešiť dátové výzvy — od konzultácií a návrhu architektúry cez analytiku a integrácie až po praktickú podporu pri realizácii projektu. Podľa potreby sa zapojím do konkrétnej úlohy alebo posilním váš tím ako externá seniorná kapacita.</p>
+          <div class="hero-ctas">
+            <a class="button button-primary" href="#kontakt"><span data-i18n="heroCtaPrimary">Prebrať projekt alebo kapacity</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+            <a class="button button-outline" href="#sluzby"><i class="fa-solid fa-layer-group" aria-hidden="true"></i><span data-i18n="heroCtaSecondary">Pozrieť hlavné služby</span></a>
+          </div>
+          <div class="hero-note"><span class="dot"></span><span data-i18n="heroNote">Bratislava · Slovensko · spolupráca online aj osobne</span></div>
+        </div>
+
+        <aside class="hero-card" aria-label="Professional focus">
+          <div class="hero-card-top">
+            <span class="hero-card-label" data-i18n="heroCardLabel">Professional focus</span>
+            <span class="hero-card-icon"><i class="fa-solid fa-chart-simple" aria-hidden="true"></i></span>
+          </div>
+          <div class="hero-stat"><strong>10+</strong><span data-i18n="heroStat">rokov skúseností v dátach, CRM a analytike</span></div>
+          <div class="hero-tags">
+            <span class="tag">SQL</span><span class="tag">Data Architecture</span><span class="tag">Analytics</span><span class="tag">CRM</span><span class="tag">Cloud</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <!-- Pás s oblasťami skúseností; tvrdenia vychádzajú z priloženého CV a profilu. -->
+    <section class="proof-strip" aria-label="Areas of experience">
+      <div class="container proof-grid">
+        <div class="proof-item"><i class="fa-solid fa-building-columns" aria-hidden="true"></i><div><strong data-i18n="proofBanking">Banking &amp; CRM</strong><span data-i18n="proofBankingSub">Transformácie a dátové domény</span></div></div>
+        <div class="proof-item"><i class="fa-solid fa-database" aria-hidden="true"></i><div><strong data-i18n="proofData">Data Platforms</strong><span data-i18n="proofDataSub">SQL, DWH, ETL a migrácie</span></div></div>
+        <div class="proof-item"><i class="fa-solid fa-chart-line" aria-hidden="true"></i><div><strong data-i18n="proofAnalytics">Analytics</strong><span data-i18n="proofAnalyticsSub">Reporting, KPI a produktové dáta</span></div></div>
+        <div class="proof-item"><i class="fa-solid fa-people-group" aria-hidden="true"></i><div><strong data-i18n="proofDelivery">Delivery &amp; Enablement</strong><span data-i18n="proofDeliverySub">Biznis, IT a tímová spolupráca</span></div></div>
+      </div>
+    </section>
+
+    <!-- SLUŽBY: prehľad toho, čo vie AccuAnalytics dodať firmám. -->
+    <section class="section" id="sluzby">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow" data-i18n="servicesEyebrow">Hlavná oblasť služieb</span>
+          <h2 data-i18n="servicesTitle">Dátové poradenstvo, projektová spolupráca a externé kapacity.</h2>
+          <p data-i18n="servicesIntro">Zapojím sa tam, kde potrebujete skúseného dátového partnera — na konzultáciu, vyriešenie konkrétnej projektovej úlohy alebo dočasné či priebežné posilnenie interného tímu.</p>
+        </div>
+
+        <!-- Tri formy spolupráce: od expertného názoru cez konkrétnu dodávku až po outsourcing kapacity. -->
+        <div class="engagement-grid">
+          <article class="engagement-card">
+            <span class="service-icon"><i class="fa-solid fa-comments" aria-hidden="true"></i></span>
+            <h3 data-i18n="engagementConsultTitle">Konzultácie &amp; odborné poradenstvo</h3>
+            <p data-i18n="engagementConsultText">Nezávislý pohľad na dátové riešenie, architektúru, modely, integrácie alebo analytické zadanie. Pomoc pri rozhodnutiach, prioritách a technickom návrhu.</p>
+            <a class="text-link" href="#kontakt" data-subject="Consulting" data-i18n="engagementConsultCta">Prediskutovať konzultáciu →</a>
+          </article>
+          <article class="engagement-card">
+            <span class="service-icon"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i></span>
+            <h3 data-i18n="engagementProjectTitle">Pomoc s projektom od zadania po dodanie</h3>
+            <p data-i18n="engagementProjectText">Pomôžem rozmeniť potrebu na požiadavky a špecifikácie, navrhnúť dátové riešenie, pripraviť mapovania a SQL logiku alebo podporiť testovanie a koordináciu dodávky.</p>
+            <a class="text-link" href="#kontakt" data-subject="Project delivery" data-i18n="engagementProjectCta">Prebrať projekt →</a>
+          </article>
+          <article class="engagement-card">
+            <span class="service-icon"><i class="fa-solid fa-people-arrows-left-right" aria-hidden="true"></i></span>
+            <h3 data-i18n="engagementCapacityTitle">Outsourcing dátových kapacít</h3>
+            <p data-i18n="engagementCapacityText">Externá seniorná kapacita na dohodnutý rozsah alebo obdobie — ako doplnenie vášho interného tímu, projektového tímu či implementačného partnera.</p>
+            <a class="text-link" href="#kontakt" data-subject="External data capacity" data-i18n="engagementCapacityCta">Dohodnúť externú kapacitu →</a>
+          </article>
+        </div>
+
+        <h3 class="expertise-heading" data-i18n="expertiseHeading">Odborné oblasti, v ktorých viem pomôcť</h3>
+        <div class="services-grid">
+          <article class="service-card">
+            <span class="service-icon"><i class="fa-solid fa-code" aria-hidden="true"></i></span>
+            <h3 data-i18n="serviceSqlTitle">SQL &amp; dátové platformy</h3>
+            <p data-i18n="serviceSqlText">Návrh a kontrola SQL riešení, práca s dátami a optimalizácia spracovania.</p>
+            <ul>
+              <li data-i18n="serviceSql1">Pokročilé SQL, dynamické SQL a optimalizácia dotazov</li>
+              <li data-i18n="serviceSql2">Oracle, BigQuery, Amazon Athena a Redshift</li>
+              <li data-i18n="serviceSql3">SQL špecifikácie, ETL logika a reporting</li>
+            </ul>
+          </article>
+
+          <article class="service-card">
+            <span class="service-icon"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i></span>
+            <h3 data-i18n="serviceArchitectureTitle">Dátová architektúra, integrácie &amp; migrácie</h3>
+            <p data-i18n="serviceArchitectureText">Návrh dátových štruktúr a tokov, prepojenie zdrojových a cieľových systémov a podpora dodávky od analýzy po validáciu.</p>
+            <ul>
+              <li data-i18n="serviceArchitecture1">Dátové modelovanie, ERD a Data Vault 2.0</li>
+              <li data-i18n="serviceArchitecture2">Source-to-target mapovanie, transformačná a migračná logika</li>
+              <li data-i18n="serviceArchitecture3">Dátové toky, ingestion, kvalita dát, UAT a SCD Type 2</li>
+            </ul>
+          </article>
+
+          <article class="service-card">
+            <span class="service-icon"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i></span>
+            <h3 data-i18n="serviceAnalyticsTitle">Dátová analytika &amp; reporting</h3>
+            <p data-i18n="serviceAnalyticsText">Premena dát na zrozumiteľné informácie, podľa ktorých sa dá rozhodovať.</p>
+            <ul>
+              <li data-i18n="serviceAnalytics1">KPI, dashboardy a manažérsky reporting</li>
+              <li data-i18n="serviceAnalytics2">CRM, kampane a produktová analytika</li>
+              <li data-i18n="serviceAnalytics3">A/B testovanie, Python a automatizácia reportov</li>
+            </ul>
+          </article>
+
+          <article class="service-card">
+            <span class="service-icon"><i class="fa-solid fa-users-gear" aria-hidden="true"></i></span>
+            <h3 data-i18n="serviceCrmTitle">CRM &amp; business transformation</h3>
+            <p data-i18n="serviceCrmText">Prepojenie biznisových požiadaviek, dátového návrhu a technického dodania.</p>
+            <ul>
+              <li data-i18n="serviceCrm1">CRM dátová doména a Salesforce data design</li>
+              <li data-i18n="serviceCrm2">Požiadavky, špecifikácie a koordinácia dodávateľov</li>
+              <li data-i18n="serviceCrm3">Podpora testovania, rozhodnutí a zmenového riadenia</li>
+            </ul>
+          </article>
+
+          <article class="service-card">
+            <span class="service-icon"><i class="fa-solid fa-cloud" aria-hidden="true"></i></span>
+            <h3 data-i18n="serviceCloudTitle">Cloud &amp; dátové sklady</h3>
+            <p data-i18n="serviceCloudText">Podpora pri návrhu a modernizácii cloudovej dátovej infraštruktúry, dátových vrstiev a reportingových riešení.</p>
+            <ul>
+              <li data-i18n="serviceCloud1">AWS Glue, Athena a Amazon Redshift</li>
+              <li data-i18n="serviceCloud2">BigQuery a návrh dátových vrstiev</li>
+              <li data-i18n="serviceCloud3">Výkon, náklady a kvalita dátových tokov</li>
+            </ul>
+          </article>
+
+          <article class="service-card">
+            <span class="service-icon"><i class="fa-solid fa-brain" aria-hidden="true"></i></span>
+            <h3 data-i18n="serviceAiTitle">AI/ML use cases &amp; enablement</h3>
+            <p data-i18n="serviceAiText">Biznisová príprava AI/ML iniciatív a spolupráca s dátovými a technologickými tímami.</p>
+            <ul>
+              <li data-i18n="serviceAi1">Identifikácia a prioritizácia use cases</li>
+              <li data-i18n="serviceAi2">CRM: churn, cross-sell a segmentácia</li>
+              <li data-i18n="serviceAi3">Dátová gramotnosť a spolupráca s Data Science</li>
+            </ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- O MNE: vysvetľuje seniorný, hands-on spôsob spolupráce. -->
+    <section class="section about-section" id="o-mne">
+      <div class="container about-grid">
+        <div>
+          <span class="eyebrow" data-i18n="aboutEyebrow">Kto stojí za AccuAnalytics</span>
+          <div class="about-panel">
+            <h3 data-i18n="aboutPanelTitle">Seniorný pohľad. Praktická realizácia.</h3>
+            <p data-i18n="aboutPanelText">Som Martin Višňovský — dátový konzultant a technologický delivery lead. Spájam technické detaily s potrebami biznisu a pomáham dostať riešenia bezpečne od zadania do praxe.</p>
+          </div>
+          <div class="experience-line">
+            <span data-i18n="aboutLangs">SK · CZ · EN</span>
+            <span>Bratislava, Slovakia</span>
+            <span data-i18n="aboutEducation">MEng · Technical University of Košice</span>
+          </div>
+        </div>
+        <div>
+          <div class="section-title-left">
+            <h2 data-i18n="aboutTitle">Rozumiem dátam aj ľuďom, ktorí s nimi pracujú.</h2>
+            <p data-i18n="aboutIntro">Skúsenosti z bankovníctva, CRM transformácií, cloudových dátových platforiem a produktovej analytiky mi umožňujú pozerať sa na problém z viacerých strán.</p>
+          </div>
+          <div class="about-points">
+            <div class="about-point"><i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i><div><h3 data-i18n="aboutPoint1Title">Prekladám medzi biznisom a IT</h3><p data-i18n="aboutPoint1Text">Z nejasných potrieb pripravím zrozumiteľné požiadavky, dátové špecifikácie a podklady pre implementáciu.</p></div></div>
+            <div class="about-point"><i class="fa-solid fa-magnifying-glass-chart" aria-hidden="true"></i><div><h3 data-i18n="aboutPoint2Title">Zostávam blízko dátam</h3><p data-i18n="aboutPoint2Text">Pracujem s SQL, mapovaniami, dátovými modelmi, validáciou a analýzou kvality či výkonu.</p></div></div>
+            <div class="about-point"><i class="fa-solid fa-handshake-angle" aria-hidden="true"></i><div><h3 data-i18n="aboutPoint3Title">Podporujem tím pri dodávke</h3><p data-i18n="aboutPoint3Text">Koordinujem stakeholderov, dodávateľov a testovanie; zdieľam know-how a pomáham rozvíjať interné schopnosti.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- VYBRANÉ SKÚSENOSTI: súhrn projektov podľa priloženého CV/LinkedIn. -->
+    <section class="section" id="projekty">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow" data-i18n="projectsEyebrow">Vybrané skúsenosti</span>
+          <h2 data-i18n="projectsTitle">Skúsenosti z reálnych dátových transformácií.</h2>
+          <p data-i18n="projectsIntro">Výber oblastí, v ktorých som pôsobil v bankovníctve, technologických službách a produktovo orientovanom prostredí.</p>
+        </div>
+        <div class="projects-grid">
+          <article class="project-card">
+            <div class="project-meta"><span class="project-type" data-i18n="projectTypeCrm">CRM transformation</span><span class="project-date" data-i18n="projectCrmDate">2024 – súčasnosť</span></div>
+            <h3 data-i18n="projectCrmTitle">Dátová doména pri enterprise CRM transformácii</h3>
+            <p data-i18n="projectCrmText">V rámci bankového CRM projektu zodpovedám za dátovú pracovnú oblasť na strane banky: mapovanie zdrojov z dvoch Oracle databáz, SQL špecifikácie, BigQuery landing vrstvu, návrh transformácií do Salesforce dátového modelu a validáciu ingestie.</p>
+            <div class="project-tags"><span>Oracle</span><span>BigQuery</span><span>Salesforce</span><span>SQL</span><span>SCD Type 2</span></div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-meta"><span class="project-type" data-i18n="projectTypeProduct">Product analytics</span><span class="project-date">2022 – 2024</span></div>
+            <h3 data-i18n="projectProductTitle">Analytika správania hráčov a monetizácie</h3>
+            <p data-i18n="projectProductText">V AI-orientovanom hernom startupe som spolupracoval s Product a Data Science tímami, tvoril SQL ETL a reporting v Amazon Athena, automatizoval prípravu dát a vyhodnocoval A/B testy a zmeny správania používateľov. Lookup zariadení umožnil spárovať viac než 95 % pozorovaných zariadení.</p>
+            <div class="project-tags"><span>Amazon Athena</span><span>SQL</span><span>Python</span><span>A/B Testing</span></div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-meta"><span class="project-type" data-i18n="projectTypeDwh">Data warehouse</span><span class="project-date">2022</span></div>
+            <h3 data-i18n="projectDwhTitle">Návrh reportingového dátového skladu</h3>
+            <p data-i18n="projectDwhText">Príspevok k architektúre a migračnému konceptu reportingového dátového skladu s využitím AWS Glue a Amazon Redshift, vrátane ERD kľúčových entít a vzťahov založeného na princípoch Data Vault 2.0.</p>
+            <div class="project-tags"><span>Data Vault 2.0</span><span>AWS Glue</span><span>Redshift</span><span>ERD</span></div>
+          </article>
+
+          <article class="project-card">
+            <div class="project-meta"><span class="project-type" data-i18n="projectTypeAi">AI &amp; CRM</span><span class="project-date">2019 – 2022</span></div>
+            <h3 data-i18n="projectAiTitle">AI/ML adopcia a CRM transformácia</h3>
+            <p data-i18n="projectAiText">Spolupodieľal som sa na biznisovo riadenej AI/ML iniciatíve v CRM — prioritizácii use cases pre cross-sell, churn a segmentáciu, tvorbe roadmapy s Data Science a IT architektúrou a budovaní internej AI komunity.</p>
+            <div class="project-tags"><span>CRM</span><span>AI/ML</span><span>Use Cases</span><span>Data Literacy</span></div>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ŠKOLENIA: hodinová cena 30 EUR a priestor pre individuálne zadania. -->
+    <section class="section training-section" id="skolenia">
+      <div class="container">
+        <div class="training-intro">
+          <div class="section-title-left">
+            <span class="eyebrow" data-i18n="trainingEyebrow">Doplnková služba · školenia</span>
+            <h2 data-i18n="trainingTitle">Praktické školenia SQL, Excel a dátovej analytiky.</h2>
+            <p data-i18n="trainingIntro">Školenia sú doplnkom k hlavným konzultačným a projektovým službám. Individuálne online alebo osobné lekcie prispôsobím vašej úrovni, cieľu a reálnym pracovným úlohám.</p>
+          </div>
+          <div class="price-note"><strong>30 €</strong><span data-i18n="hourPrice">za 1 hodinu<br>individuálnej výučby</span></div>
+        </div>
+
+        <div class="training-grid">
+          <article class="training-card">
+            <span class="service-icon"><i class="fa-solid fa-database" aria-hidden="true"></i></span>
+            <h3>SQL</h3>
+            <p data-i18n="trainingSqlText">Od základov dotazovania až po pokročilejšiu prácu s relačnými dátami a optimalizáciu.</p>
+            <ul>
+              <li data-i18n="trainingSql1">SELECT, filtrovanie, JOIN a agregácie</li>
+              <li data-i18n="trainingSql2">CTE, poddotazy a analytické funkcie</li>
+              <li data-i18n="trainingSql3">Praktické úlohy a čítanie existujúcich dotazov</li>
+            </ul>
+            <a class="button button-outline" href="#kontakt" data-subject="SQL training"><span data-i18n="trainingCta">Dohodnúť školenie</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </article>
+
+          <article class="training-card">
+            <span class="service-icon"><i class="fa-solid fa-file-excel" aria-hidden="true"></i></span>
+            <h3>Excel</h3>
+            <p data-i18n="trainingExcelText">Efektívnejšia práca s tabuľkami, čistenie dát a príprava zrozumiteľného reportingu.</p>
+            <ul>
+              <li data-i18n="trainingExcel1">Vzorce, funkcie a práca s tabuľkami</li>
+              <li data-i18n="trainingExcel2">Kontingenčné tabuľky a sumarizácia</li>
+              <li data-i18n="trainingExcel3">Čistenie, kontrola a príprava dát</li>
+            </ul>
+            <a class="button button-outline" href="#kontakt" data-subject="Excel training"><span data-i18n="trainingCta">Dohodnúť školenie</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </article>
+
+          <article class="training-card">
+            <span class="service-icon"><i class="fa-solid fa-chart-column" aria-hidden="true"></i></span>
+            <h3 data-i18n="trainingAnalyticsTitle">Dátová analytika</h3>
+            <p data-i18n="trainingAnalyticsText">Ako zadefinovať analytickú otázku, pracovať s KPI a premeniť výsledky na odporúčania.</p>
+            <ul>
+              <li data-i18n="trainingAnalytics1">Analytický postup a interpretácia dát</li>
+              <li data-i18n="trainingAnalytics2">KPI, reporting a prezentácia zistení</li>
+              <li data-i18n="trainingAnalytics3">Základy A/B testovania a produktovej analytiky</li>
+            </ul>
+            <a class="button button-outline" href="#kontakt" data-subject="Data Analytics training"><span data-i18n="trainingCta">Dohodnúť školenie</span><i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
+          </article>
+        </div>
+
+        <div class="training-custom">
+          <div>
+            <h3 data-i18n="customTrainingTitle">Firemné školenia, konzultácie a individuálne kurzy</h3>
+            <p data-i18n="customTrainingText">Potrebujete školiť tím, vyriešiť konkrétny dátový problém alebo pripraviť kurz podľa interných dát a procesov? Rozsah, formát aj cenu nastavíme podľa zadania.</p>
+          </div>
+          <ul class="custom-list">
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i><span data-i18n="custom1">SQL pre analytikov a reporting</span></li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i><span data-i18n="custom2">Dátové modelovanie a kvalita dát</span></li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i><span data-i18n="custom3">CRM, Salesforce a dátové migrácie</span></li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i><span data-i18n="custom4">Analytika produktov a A/B testovanie</span></li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i><span data-i18n="custom5">Dátová stratégia a AI/ML use cases</span></li>
+            <li><i class="fa-solid fa-check" aria-hidden="true"></i><span data-i18n="custom6">Individuálne konzultácie a mentoring</span></li>
+          </ul>
+        </div>
+        <p class="training-footnote" data-i18n="trainingFootnote">Cena 30 €/hod. platí pre individuálne školenia SQL, Excel a dátovej analytiky. Firemné kurzy, príprava obsahu a konzultácie sa naceňujú individuálne podľa rozsahu.</p>
+        <!-- TODO: Po výbere platformy nahraďte odkaz pri CTA školení alebo doplňte tlačidlo na konkrétnu online učebňu / rezervačnú stránku. -->
+      </div>
+    </section>
+
+    <!-- KONTAKT: priame kontaktné kanály + formulár. Formspree endpoint je prevzatý z pôvodného HTML. -->
+    <section class="section" id="kontakt">
+      <div class="container">
+        <div class="section-heading">
+          <span class="eyebrow" data-i18n="contactEyebrow">Spojme sa</span>
+          <h2 data-i18n="contactTitle">Potrebujete konzultáciu, pomoc s projektom alebo posilniť tím?</h2>
+          <p data-i18n="contactIntro">Napíšte mi, aký problém riešite, v akej fáze je projekt a akú podporu hľadáte. Spoločne prejdeme vhodný rozsah spolupráce.</p>
+        </div>
+
+        <div class="contact-layout">
+          <div class="contact-card dark">
+            <span class="eyebrow" data-i18n="contactDirectEyebrow">Priamy kontakt</span>
+            <h2 data-i18n="contactDirectTitle">Porozprávajme sa o vašich dátach.</h2>
+            <p data-i18n="contactDirectText">Pre odborné konzultácie, dátové a analytické projekty, integrácie aj externé posilnenie tímu. Školenia sú doplnkovou službou.</p>
+            <div class="contact-details">
+              <a class="contact-detail" href="mailto:accuanalytics.sk@gmail.com"><i class="fa-regular fa-envelope" aria-hidden="true"></i><div><span data-i18n="contactEmailLabel">E-mail</span><strong>accuanalytics.sk@gmail.com</strong></div></a>
+              <a class="contact-detail" href="tel:+421915073965"><i class="fa-solid fa-phone" aria-hidden="true"></i><div><span data-i18n="contactPhoneLabel">Telefón</span><strong>+421 915 073 965</strong></div></a>
+              <a class="contact-detail" href="https://www.linkedin.com/in/martin-vi%C5%A1novsk%C3%BD-76618635/" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-linkedin-in" aria-hidden="true"></i><div><span>LinkedIn</span><strong data-i18n="contactLinkedinLabel">Pozrieť profesijný profil</strong></div></a>
+            </div>
+          </div>
+
+          <div class="contact-card">
+            <form class="contact-form" id="contactForm" action="https://formspree.io/f/mjgpkjqq" method="POST">
+              <div class="form-row">
+                <div class="form-group"><label for="name" data-i18n="formName">Meno</label><input id="name" name="name" type="text" required autocomplete="name" placeholder="Vaše meno" data-i18n-placeholder="formNamePlaceholder"></div>
+                <div class="form-group"><label for="email" data-i18n="formEmail">E-mail</label><input id="email" name="email" type="email" required autocomplete="email" placeholder="accuanalytics.sk@gmail.com" data-i18n-placeholder="formEmailPlaceholder"></div>
+              </div>
+              <div class="form-group">
+                <label for="topic" data-i18n="formTopic">Téma</label>
+                <select id="topic" name="topic">
+                  <option value="Consulting" data-i18n="formTopicConsulting">Dátové poradenstvo / konzultácia</option>
+                  <option value="Project delivery" data-i18n="formTopicProject">Pomoc s projektom / dodávka riešenia</option>
+                  <option value="External data capacity" data-i18n="formTopicCapacity">Externá dátová kapacita / outsourcing</option>
+                  <option value="Data architecture and integration" data-i18n="formTopicIntegration">Dátová architektúra / integrácie</option>
+                  <option value="SQL training" data-i18n="formTopicSql">Školenie SQL</option>
+                  <option value="Excel training" data-i18n="formTopicExcel">Školenie Excel</option>
+                  <option value="Data Analytics training" data-i18n="formTopicAnalytics">Školenie dátovej analytiky</option>
+                  <option value="Corporate training" data-i18n="formTopicCorporate">Firemné školenie / workshop</option>
+                  <option value="Other" data-i18n="formTopicOther">Iné</option>
+                </select>
+              </div>
+              <div class="form-group"><label for="message" data-i18n="formMessage">Správa</label><textarea id="message" name="message" required placeholder="Stručne opíšte, s čím potrebujete pomôcť..." data-i18n-placeholder="formMessagePlaceholder"></textarea></div>
+              <input type="hidden" name="_subject" value="Nová správa z webu AccuAnalytics">
+              <div class="form-foot">
+                <button class="button button-primary" type="submit"><span data-i18n="formSubmit">Odoslať správu</span><i class="fa-solid fa-paper-plane" aria-hidden="true"></i></button>
+                <p class="form-hint" data-i18n="formHint">Formulár odošle správu na kontaktný e-mail.</p>
+              </div>
+              <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-row">
+      <p class="footer-copy">© <span id="year"></span> AccuAnalytics. <span data-i18n="footerRights">Všetky práva vyhradené.</span></p>
+      <div class="footer-links">
+        <a href="#sluzby" data-i18n="navServices">Služby</a>
+        <a href="#skolenia" data-i18n="navTraining">Školenia</a>
+        <a href="#kontakt" data-i18n="navContact">Kontakt</a>
+        <a href="https://www.linkedin.com/in/martin-vi%C5%A1novsk%C3%BD-76618635/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      </div>
+    </div>
+    <!-- PRED ZVEREJNENÍM DOPLNIŤ: presné obchodné meno s.r.o., sídlo, IČO, DIČ/IČ DPH (ak pridelené), zápis v ORSR a odkazy na zásady ochrany osobných údajov / cookies podľa reálne používaných služieb. Tieto údaje neboli v podkladoch uvedené, preto nie sú vymyslené. -->
+  </footer>
+
+  <script>
+    /* ================================================================
+       JAZYKOVÁ MUTÁCIA: SK je predvolená. Prekladové kľúče sú oddelené
+       od HTML, aby bolo možné dopĺňať texty na jednom mieste.
+       ================================================================ */
+    const translations = {
+      sk: {
+        navServices: "Služby", navTraining: "Školenia", navProjects: "Skúsenosti", navAbout: "O mne", navContact: "Kontakt",
+        heroEyebrow: "Konzultácie · projektová delivery · externé kapacity",
+        heroTitle: 'Dátové projekty, ktoré sa <span>posúvajú dopredu.</span>',
+        heroText: "Pomáham firmám riešiť dátové výzvy — od konzultácií a návrhu architektúry cez analytiku a integrácie až po praktickú podporu pri realizácii projektu. Podľa potreby sa zapojím do konkrétnej úlohy alebo posilním váš tím ako externá seniorná kapacita.",
+        heroCtaPrimary: "Prebrať projekt alebo kapacity", heroCtaSecondary: "Pozrieť hlavné služby", heroNote: "Bratislava · Slovensko · spolupráca online aj osobne",
+        heroCardLabel: "Professional focus", heroStat: "rokov skúseností v dátach, CRM a analytike",
+        proofBanking: "Banking & CRM", proofBankingSub: "Transformácie a dátové domény", proofData: "Data Platforms", proofDataSub: "SQL, DWH, ETL a migrácie", proofAnalytics: "Analytics", proofAnalyticsSub: "Reporting, KPI a produktové dáta", proofDelivery: "Delivery & Enablement", proofDeliverySub: "Biznis, IT a tímová spolupráca",
+        servicesEyebrow: "Hlavná oblasť služieb", servicesTitle: "Dátové poradenstvo, projektová spolupráca a externé kapacity.", servicesIntro: "Zapojím sa tam, kde potrebujete skúseného dátového partnera — na konzultáciu, vyriešenie konkrétnej projektovej úlohy alebo dočasné či priebežné posilnenie interného tímu.",
+        engagementConsultTitle: "Konzultácie & odborné poradenstvo", engagementConsultText: "Nezávislý pohľad na dátové riešenie, architektúru, modely, integrácie alebo analytické zadanie. Pomoc pri rozhodnutiach, prioritách a technickom návrhu.", engagementConsultCta: "Prediskutovať konzultáciu →",
+        engagementProjectTitle: "Pomoc s projektom od zadania po dodanie", engagementProjectText: "Pomôžem rozmeniť potrebu na požiadavky a špecifikácie, navrhnúť dátové riešenie, pripraviť mapovania a SQL logiku alebo podporiť testovanie a koordináciu dodávky.", engagementProjectCta: "Prebrať projekt →",
+        engagementCapacityTitle: "Outsourcing dátových kapacít", engagementCapacityText: "Externá seniorná kapacita na dohodnutý rozsah alebo obdobie — ako doplnenie vášho interného tímu, projektového tímu či implementačného partnera.", engagementCapacityCta: "Dohodnúť externú kapacitu →",
+        expertiseHeading: "Odborné oblasti, v ktorých viem pomôcť",
+        serviceSqlTitle: "SQL & dátové platformy", serviceSqlText: "Návrh a kontrola SQL riešení, práca s dátami a optimalizácia spracovania.", serviceSql1: "Pokročilé SQL, dynamické SQL a optimalizácia dotazov", serviceSql2: "Oracle, BigQuery, Amazon Athena a Redshift", serviceSql3: "SQL špecifikácie, ETL logika a reporting",
+        serviceArchitectureTitle: "Dátová architektúra, integrácie & migrácie", serviceArchitectureText: "Návrh dátových štruktúr a tokov, prepojenie zdrojových a cieľových systémov a podpora dodávky od analýzy po validáciu.", serviceArchitecture1: "Dátové modelovanie, ERD a Data Vault 2.0", serviceArchitecture2: "Source-to-target mapovanie, transformačná a migračná logika", serviceArchitecture3: "Dátové toky, ingestion, kvalita dát, UAT a SCD Type 2",
+        serviceAnalyticsTitle: "Dátová analytika & reporting", serviceAnalyticsText: "Premena dát na zrozumiteľné informácie, podľa ktorých sa dá rozhodovať.", serviceAnalytics1: "KPI, dashboardy a manažérsky reporting", serviceAnalytics2: "CRM, kampane a produktová analytika", serviceAnalytics3: "A/B testovanie, Python a automatizácia reportov",
+        serviceCrmTitle: "CRM & business transformation", serviceCrmText: "Prepojenie biznisových požiadaviek, dátového návrhu a technického dodania.", serviceCrm1: "CRM dátová doména a Salesforce data design", serviceCrm2: "Požiadavky, špecifikácie a koordinácia dodávateľov", serviceCrm3: "Podpora testovania, rozhodnutí a zmenového riadenia",
+        serviceCloudTitle: "Cloud & dátové sklady", serviceCloudText: "Podpora pri návrhu a modernizácii cloudovej dátovej infraštruktúry, dátových vrstiev a reportingových riešení.", serviceCloud1: "AWS Glue, Athena a Amazon Redshift", serviceCloud2: "BigQuery a návrh dátových vrstiev", serviceCloud3: "Výkon, náklady a kvalita dátových tokov",
+        serviceAiTitle: "AI/ML use cases & enablement", serviceAiText: "Biznisová príprava AI/ML iniciatív a spolupráca s dátovými a technologickými tímami.", serviceAi1: "Identifikácia a prioritizácia use cases", serviceAi2: "CRM: churn, cross-sell a segmentácia", serviceAi3: "Dátová gramotnosť a spolupráca s Data Science",
+        aboutEyebrow: "Kto stojí za AccuAnalytics", aboutPanelTitle: "Seniorný pohľad. Praktická realizácia.", aboutPanelText: "Som Martin Višňovský — dátový konzultant a technologický delivery lead. Spájam technické detaily s potrebami biznisu a pomáham dostať riešenia bezpečne od zadania do praxe.", aboutLangs: "SK · CZ · EN", aboutEducation: "MEng · Technical University of Košice", aboutTitle: "Rozumiem dátam aj ľuďom, ktorí s nimi pracujú.", aboutIntro: "Skúsenosti z bankovníctva, CRM transformácií, cloudových dátových platforiem a produktovej analytiky mi umožňujú pozerať sa na problém z viacerých strán.", aboutPoint1Title: "Prekladám medzi biznisom a IT", aboutPoint1Text: "Z nejasných potrieb pripravím zrozumiteľné požiadavky, dátové špecifikácie a podklady pre implementáciu.", aboutPoint2Title: "Zostávam blízko dátam", aboutPoint2Text: "Pracujem s SQL, mapovaniami, dátovými modelmi, validáciou a analýzou kvality či výkonu.", aboutPoint3Title: "Podporujem tím pri dodávke", aboutPoint3Text: "Koordinujem stakeholderov, dodávateľov a testovanie; zdieľam know-how a pomáham rozvíjať interné schopnosti.",
+        projectsEyebrow: "Vybrané skúsenosti", projectsTitle: "Skúsenosti z reálnych dátových transformácií.", projectsIntro: "Výber oblastí, v ktorých som pôsobil v bankovníctve, technologických službách a produktovo orientovanom prostredí.", projectTypeCrm: "CRM transformation", projectCrmDate: "2024 – súčasnosť", projectCrmTitle: "Dátová doména pri enterprise CRM transformácii", projectCrmText: "V rámci bankového CRM projektu zodpovedám za dátovú pracovnú oblasť na strane banky: mapovanie zdrojov z dvoch Oracle databáz, SQL špecifikácie, BigQuery landing vrstvu, návrh transformácií do Salesforce dátového modelu a validáciu ingestie.", projectTypeProduct: "Product analytics", projectProductTitle: "Analytika správania hráčov a monetizácie", projectProductText: "V AI-orientovanom hernom startupe som spolupracoval s Product a Data Science tímami, tvoril SQL ETL a reporting v Amazon Athena, automatizoval prípravu dát a vyhodnocoval A/B testy a zmeny správania používateľov. Lookup zariadení umožnil spárovať viac než 95 % pozorovaných zariadení.", projectTypeDwh: "Data warehouse", projectDwhTitle: "Návrh reportingového dátového skladu", projectDwhText: "Príspevok k architektúre a migračnému konceptu reportingového dátového skladu s využitím AWS Glue a Amazon Redshift, vrátane ERD kľúčových entít a vzťahov založeného na princípoch Data Vault 2.0.", projectTypeAi: "AI & CRM", projectAiTitle: "AI/ML adopcia a CRM transformácia", projectAiText: "Spolupodieľal som sa na biznisovo riadenej AI/ML iniciatíve v CRM — prioritizácii use cases pre cross-sell, churn a segmentáciu, tvorbe roadmapy s Data Science a IT architektúrou a budovaní internej AI komunity.",
+        trainingEyebrow: "Doplnková služba · školenia", trainingTitle: "Praktické školenia SQL, Excel a dátovej analytiky.", trainingIntro: "Školenia sú doplnkom k hlavným konzultačným a projektovým službám. Individuálne online alebo osobné lekcie prispôsobím vašej úrovni, cieľu a reálnym pracovným úlohám.", hourPrice: "za 1 hodinu<br>individuálnej výučby", trainingSqlText: "Od základov dotazovania až po pokročilejšiu prácu s relačnými dátami a optimalizáciu.", trainingSql1: "SELECT, filtrovanie, JOIN a agregácie", trainingSql2: "CTE, poddotazy a analytické funkcie", trainingSql3: "Praktické úlohy a čítanie existujúcich dotazov", trainingExcelText: "Efektívnejšia práca s tabuľkami, čistenie dát a príprava zrozumiteľného reportingu.", trainingExcel1: "Vzorce, funkcie a práca s tabuľkami", trainingExcel2: "Kontingenčné tabuľky a sumarizácia", trainingExcel3: "Čistenie, kontrola a príprava dát", trainingAnalyticsTitle: "Dátová analytika", trainingAnalyticsText: "Ako zadefinovať analytickú otázku, pracovať s KPI a premeniť výsledky na odporúčania.", trainingAnalytics1: "Analytický postup a interpretácia dát", trainingAnalytics2: "KPI, reporting a prezentácia zistení", trainingAnalytics3: "Základy A/B testovania a produktovej analytiky", trainingCta: "Dohodnúť školenie", customTrainingTitle: "Firemné školenia, konzultácie a individuálne kurzy", customTrainingText: "Potrebujete školiť tím, vyriešiť konkrétny dátový problém alebo pripraviť kurz podľa interných dát a procesov? Rozsah, formát aj cenu nastavíme podľa zadania.", custom1: "SQL pre analytikov a reporting", custom2: "Dátové modelovanie a kvalita dát", custom3: "CRM, Salesforce a dátové migrácie", custom4: "Analytika produktov a A/B testovanie", custom5: "Dátová stratégia a AI/ML use cases", custom6: "Individuálne konzultácie a mentoring", trainingFootnote: "Cena 30 €/hod. platí pre individuálne školenia SQL, Excel a dátovej analytiky. Firemné kurzy, príprava obsahu a konzultácie sa naceňujú individuálne podľa rozsahu.",
+        contactEyebrow: "Spojme sa", contactTitle: "Potrebujete konzultáciu, pomoc s projektom alebo posilniť tím?", contactIntro: "Napíšte mi, aký problém riešite, v akej fáze je projekt a akú podporu hľadáte. Spoločne prejdeme vhodný rozsah spolupráce.", contactDirectEyebrow: "Priamy kontakt", contactDirectTitle: "Porozprávajme sa o vašich dátach.", contactDirectText: "Pre odborné konzultácie, dátové a analytické projekty, integrácie aj externé posilnenie tímu. Školenia sú doplnkovou službou.", contactEmailLabel: "E-mail", contactPhoneLabel: "Telefón", contactLinkedinLabel: "Pozrieť profesijný profil", formName: "Meno", formNamePlaceholder: "Vaše meno", formEmail: "E-mail", formEmailPlaceholder: "accuanalytics.sk@gmail.com", formTopic: "Téma", formTopicConsulting: "Dátové poradenstvo / konzultácia", formTopicProject: "Pomoc s projektom / dodávka riešenia", formTopicCapacity: "Externá dátová kapacita / outsourcing", formTopicIntegration: "Dátová architektúra / integrácie", formTopicSql: "Školenie SQL", formTopicExcel: "Školenie Excel", formTopicAnalytics: "Školenie dátovej analytiky", formTopicCorporate: "Firemné školenie / workshop", formTopicOther: "Iné", formMessage: "Správa", formMessagePlaceholder: "Stručne opíšte, s čím potrebujete pomôcť...", formSubmit: "Odoslať správu", formHint: "Formulár odošle správu na kontaktný e-mail.", formSending: "Odosielam správu…", formSuccess: "Ďakujem. Správa bola úspešne odoslaná.", formError: "Správu sa nepodarilo odoslať. Skúste to, prosím, znova alebo napíšte priamo na accuanalytics.sk@gmail.com.", footerRights: "Všetky práva vyhradené."
+      },
+      en: {
+        navServices: "Services", navTraining: "Training", navProjects: "Experience", navAbout: "About", navContact: "Contact",
+        heroEyebrow: "Consulting · project delivery · external capacity",
+        heroTitle: 'Data projects that <span>move forward.</span>',
+        heroText: "I help businesses solve data challenges — from consulting and architecture design to analytics, integrations and hands-on project delivery. I can take ownership of a specific workstream or strengthen your team as an external senior data specialist.",
+        heroCtaPrimary: "Discuss a project or capacity", heroCtaSecondary: "Explore core services", heroNote: "Bratislava · Slovakia · remote or in-person collaboration",
+        heroCardLabel: "Professional focus", heroStat: "years of experience in data, CRM and analytics",
+        proofBanking: "Banking & CRM", proofBankingSub: "Transformations and data domains", proofData: "Data Platforms", proofDataSub: "SQL, DWH, ETL and migrations", proofAnalytics: "Analytics", proofAnalyticsSub: "Reporting, KPIs and product data", proofDelivery: "Delivery & Enablement", proofDeliverySub: "Business, IT and team collaboration",
+        servicesEyebrow: "Core services", servicesTitle: "Data consulting, project delivery and flexible external capacity.", servicesIntro: "Bring in an experienced data partner when you need expert advice, help delivering a specific project or additional senior capacity to support your existing team.",
+        engagementConsultTitle: "Consulting & expert advisory", engagementConsultText: "An independent perspective on data solutions, architecture, models, integrations or analytical requirements — supporting technical decisions, priorities and solution design.", engagementConsultCta: "Discuss a consultation →",
+        engagementProjectTitle: "Project support from requirements to delivery", engagementProjectText: "I can turn business needs into requirements and specifications, shape the data solution, prepare mappings and SQL logic, and support testing and delivery coordination.", engagementProjectCta: "Discuss your project →",
+        engagementCapacityTitle: "Outsourced data capacity", engagementCapacityText: "External senior data expertise for an agreed scope or period — complementing your in-house team, project team or implementation partner.", engagementCapacityCta: "Discuss external capacity →",
+        expertiseHeading: "Areas where I can contribute",
+        serviceSqlTitle: "SQL & data platforms", serviceSqlText: "Design and review of SQL solutions, data analysis and processing optimisation.", serviceSql1: "Advanced SQL, dynamic SQL and query optimisation", serviceSql2: "Oracle, BigQuery, Amazon Athena and Redshift", serviceSql3: "SQL specifications, ETL logic and reporting",
+        serviceArchitectureTitle: "Data architecture, integrations & migrations", serviceArchitectureText: "Designing data structures and flows, connecting source and target systems, and supporting delivery from analysis through validation.", serviceArchitecture1: "Data modelling, ERDs and Data Vault 2.0", serviceArchitecture2: "Source-to-target mapping, transformation and migration logic", serviceArchitecture3: "Data flows, ingestion, data quality, UAT and SCD Type 2",
+        serviceAnalyticsTitle: "Data analytics & reporting", serviceAnalyticsText: "Turning data into clear information that supports better decisions.", serviceAnalytics1: "KPIs, dashboards and executive reporting", serviceAnalytics2: "CRM, campaign and product analytics", serviceAnalytics3: "A/B testing, Python and reporting automation",
+        serviceCrmTitle: "CRM & business transformation", serviceCrmText: "Bridging business requirements, data design and technical delivery.", serviceCrm1: "CRM data domains and Salesforce data design", serviceCrm2: "Requirements, specifications and vendor coordination", serviceCrm3: "Testing support, decision-making and change management",
+        serviceCloudTitle: "Cloud & data warehouses", serviceCloudText: "Support with designing and modernising cloud data infrastructure, data layers and reporting solutions.", serviceCloud1: "AWS Glue, Athena and Amazon Redshift", serviceCloud2: "BigQuery and data-layer design", serviceCloud3: "Performance, cost and data-flow quality",
+        serviceAiTitle: "AI/ML use cases & enablement", serviceAiText: "Business preparation of AI/ML initiatives and collaboration with data and technology teams.", serviceAi1: "Use-case identification and prioritisation", serviceAi2: "CRM: churn, cross-sell and segmentation", serviceAi3: "Data literacy and collaboration with Data Science",
+        aboutEyebrow: "The person behind AccuAnalytics", aboutPanelTitle: "Senior perspective. Practical delivery.", aboutPanelText: "I’m Martin Višňovský — a data consultant and technology delivery lead. I connect technical detail with business needs and help take solutions from requirements into practice.", aboutLangs: "SK · CZ · EN", aboutEducation: "MEng · Technical University of Košice", aboutTitle: "I understand both data and the people who work with it.", aboutIntro: "Experience across banking, CRM transformation, cloud data platforms and product analytics helps me approach challenges from multiple angles.", aboutPoint1Title: "I bridge business and IT", aboutPoint1Text: "I turn unclear needs into understandable requirements, data specifications and implementation-ready inputs.", aboutPoint2Title: "I stay close to the data", aboutPoint2Text: "I work with SQL, mappings, data models, validation and data quality or performance analysis.", aboutPoint3Title: "I support teams through delivery", aboutPoint3Text: "I coordinate stakeholders, vendors and testing, share knowledge and help build internal capabilities.",
+        projectsEyebrow: "Selected experience", projectsTitle: "Experience from real-world data transformations.", projectsIntro: "A selection of work across banking, technology services and product-focused environments.", projectTypeCrm: "CRM transformation", projectCrmDate: "2024 – present", projectCrmTitle: "Data domain ownership in an enterprise CRM transformation", projectCrmText: "Within a banking CRM programme, I own the bank-side data workstream: mapping sources across two Oracle databases, defining SQL specifications and the BigQuery landing layer, shaping transformations into the Salesforce data model, and validating ingestion.", projectTypeProduct: "Product analytics", projectProductTitle: "Player behaviour and monetisation analytics", projectProductText: "At an AI-focused gaming startup, I partnered with Product and Data Science teams, built SQL ETL and reporting in Amazon Athena, automated data preparation, and evaluated A/B tests and user behaviour. A device lookup matched more than 95% of observed devices.", projectTypeDwh: "Data warehouse", projectDwhTitle: "Reporting data warehouse design", projectDwhText: "Contributed to the architecture and migration concept for a reporting data warehouse using AWS Glue and Amazon Redshift, including an ERD of core entities and relationships based on Data Vault 2.0 principles.", projectTypeAi: "AI & CRM", projectAiTitle: "AI/ML adoption and CRM transformation", projectAiText: "Co-contributed to a business-led AI/ML initiative within CRM — prioritising cross-sell, churn and segmentation use cases, shaping a roadmap with Data Science and IT architecture, and building an internal AI community.",
+        trainingEyebrow: "Additional service · training", trainingTitle: "Practical SQL, Excel and Data Analytics training.", trainingIntro: "Training is an additional service alongside the core consulting and project work. One-to-one online or in-person sessions are tailored to your level, goals and real work tasks.", hourPrice: "per 1 hour<br>of individual training", trainingSqlText: "From the foundations of querying to more advanced work with relational data and optimisation.", trainingSql1: "SELECT, filtering, JOINs and aggregations", trainingSql2: "CTEs, subqueries and analytical functions", trainingSql3: "Practical exercises and reading existing queries", trainingExcelText: "Work more effectively with spreadsheets, clean data and prepare clear reports.", trainingExcel1: "Formulas, functions and working with tables", trainingExcel2: "Pivot tables and summarisation", trainingExcel3: "Data cleaning, checking and preparation", trainingAnalyticsTitle: "Data Analytics", trainingAnalyticsText: "Learn how to frame an analytical question, work with KPIs and turn findings into recommendations.", trainingAnalytics1: "Analytical workflow and data interpretation", trainingAnalytics2: "KPIs, reporting and communicating findings", trainingAnalytics3: "A/B testing and product analytics fundamentals", trainingCta: "Arrange training", customTrainingTitle: "Corporate training, consulting and tailored courses", customTrainingText: "Need to train a team, solve a specific data problem or build a course around your internal data and processes? We will agree the scope, format and price based on your needs.", custom1: "SQL for analysts and reporting", custom2: "Data modelling and data quality", custom3: "CRM, Salesforce and data migrations", custom4: "Product analytics and A/B testing", custom5: "Data strategy and AI/ML use cases", custom6: "One-to-one consulting and mentoring", trainingFootnote: "The €30/hour rate applies to individual SQL, Excel and Data Analytics training. Corporate courses, content preparation and consulting are quoted individually based on scope.",
+        contactEyebrow: "Get in touch", contactTitle: "Need expert advice, project support or additional team capacity?", contactIntro: "Tell me what you are working on, where the project stands and what kind of support you need. We can agree on a suitable scope of engagement.", contactDirectEyebrow: "Direct contact", contactDirectTitle: "Let’s talk about your data.", contactDirectText: "For expert consulting, data and analytics projects, integrations or external team capacity. Training is an additional service.", contactEmailLabel: "Email", contactPhoneLabel: "Phone", contactLinkedinLabel: "View professional profile", formName: "Name", formNamePlaceholder: "Your name", formEmail: "Email", formEmailPlaceholder: "accuanalytics.sk@gmail.com", formTopic: "Topic", formTopicConsulting: "Data consulting / advisory", formTopicProject: "Project support / delivery", formTopicCapacity: "External data capacity / outsourcing", formTopicIntegration: "Data architecture / integrations", formTopicSql: "SQL training", formTopicExcel: "Excel training", formTopicAnalytics: "Data Analytics training", formTopicCorporate: "Corporate training / workshop", formTopicOther: "Other", formMessage: "Message", formMessagePlaceholder: "Briefly describe what you need help with...", formSubmit: "Send message", formHint: "The form sends your message to the contact email.", formSending: "Sending your message…", formSuccess: "Thank you. Your message was sent successfully.", formError: "Your message could not be sent. Please try again or email accuanalytics.sk@gmail.com directly.", footerRights: "All rights reserved."
+      }
+    };
+
+    /* Jazyk: texty sa vkladajú cez textContent. Len nadpis hero a cena obsahujú
+       zámerné jednoduché HTML span/br, preto majú samostatné bezpečné vetvy. */
+    // Bezpečný prístup k localStorage: niektoré prehliadače ho pri otvorení
+    // súboru cez file:// alebo v súkromnom režime môžu zablokovať.
+    function storageGet(key) {
+      try { return window.localStorage.getItem(key); } catch (error) { return null; }
+    }
+    function storageSet(key, value) {
+      try { window.localStorage.setItem(key, value); } catch (error) { /* stránka funguje aj bez ukladania preferencií */ }
+    }
+
+    function setLanguage(lang) {
+      const dictionary = translations[lang] || translations.sk;
+      document.documentElement.lang = lang;
+      document.title = lang === "en"
+        ? "AccuAnalytics | Data & Technology Consulting"
+        : "AccuAnalytics | Dátové poradenstvo a projektová spolupráca";
+      document.querySelectorAll("[data-i18n]").forEach((element) => {
+        const key = element.dataset.i18n;
+        if (Object.prototype.hasOwnProperty.call(dictionary, key)) {
+          if (key === "heroTitle" || key === "hourPrice") element.innerHTML = dictionary[key];
+          else element.textContent = dictionary[key];
+        }
+      });
+      document.querySelectorAll("[data-i18n-placeholder]").forEach((element) => {
+        const key = element.dataset.i18nPlaceholder;
+        if (dictionary[key]) element.setAttribute("placeholder", dictionary[key]);
+      });
+      document.querySelectorAll("[data-set-lang]").forEach((button) => {
+        const active = button.dataset.setLang === lang;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
+      });
+      const status = document.getElementById("formStatus");
+      if (status && status.dataset.statusKey) status.textContent = dictionary[status.dataset.statusKey] || "";
+      storageSet("accu-language", lang);
+    }
+
+    document.querySelectorAll("[data-set-lang]").forEach((button) => {
+      button.addEventListener("click", () => setLanguage(button.dataset.setLang));
+    });
+
+    /* Prepnutie svetlej/tmavej témy; preferencia sa uloží v prehliadači. */
+    const themeBtn = document.getElementById("themeBtn");
+    function setTheme(isDark) {
+      document.body.classList.toggle("dark-theme", isDark);
+      themeBtn.innerHTML = isDark ? '<i class="fa-solid fa-sun" aria-hidden="true"></i>' : '<i class="fa-solid fa-moon" aria-hidden="true"></i>';
+      themeBtn.setAttribute("aria-label", isDark ? (document.documentElement.lang === "en" ? "Switch to light theme" : "Prepnúť na svetlý vzhľad") : (document.documentElement.lang === "en" ? "Switch to dark theme" : "Prepnúť na tmavý vzhľad"));
+      storageSet("accu-theme", isDark ? "dark" : "light");
+    }
+    themeBtn.addEventListener("click", () => setTheme(!document.body.classList.contains("dark-theme")));
+
+    /* Mobilná navigácia sa po výbere položky automaticky zatvorí. */
+    const menuBtn = document.getElementById("menuBtn");
+    const mainNav = document.getElementById("mainNav");
+    menuBtn.addEventListener("click", () => {
+      const open = mainNav.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(open));
+      menuBtn.innerHTML = open ? '<i class="fa-solid fa-xmark" aria-hidden="true"></i>' : '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
+    });
+    mainNav.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => {
+      mainNav.classList.remove("open");
+      menuBtn.setAttribute("aria-expanded", "false");
+      menuBtn.innerHTML = '<i class="fa-solid fa-bars" aria-hidden="true"></i>';
+    }));
+
+    /* Predvyplnenie témy v kontaktnom formulári po kliknutí na kartu služby alebo školenia. */
+    document.querySelectorAll("a[data-subject]").forEach((link) => {
+      link.addEventListener("click", () => {
+        const topic = document.getElementById("topic");
+        if (topic) topic.value = link.dataset.subject;
+      });
+    });
+
+    /* Formulár posiela dáta do pôvodného Formspree endpointu.
+       Pred spustením overte, že endpoint stále patrí vašej schránke. */
+    const contactForm = document.getElementById("contactForm");
+    const formStatus = document.getElementById("formStatus");
+    contactForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const lang = document.documentElement.lang === "en" ? "en" : "sk";
+      const submitButton = contactForm.querySelector('button[type="submit"]');
+      const submitLabel = submitButton.querySelector("span");
+      submitButton.disabled = true;
+      submitButton.style.opacity = ".7";
+      submitLabel.textContent = translations[lang].formSending;
+      formStatus.textContent = "";
+      formStatus.dataset.statusKey = "";
+      try {
+        const response = await fetch(contactForm.action, {
+          method: "POST",
+          body: new FormData(contactForm),
+          headers: { "Accept": "application/json" }
+        });
+        if (!response.ok) throw new Error("Form submission failed");
+        formStatus.dataset.statusKey = "formSuccess";
+        formStatus.textContent = translations[lang].formSuccess;
+        contactForm.reset();
+      } catch (error) {
+        formStatus.dataset.statusKey = "formError";
+        formStatus.textContent = translations[lang].formError;
+      } finally {
+        submitButton.disabled = false;
+        submitButton.style.opacity = "1";
+        submitLabel.textContent = translations[lang].formSubmit;
+      }
+    });
+
+    /* Inicializácia: jazyk a téma z lokálnej preferencie, rok automaticky. */
+    document.getElementById("year").textContent = new Date().getFullYear();
+    setLanguage(storageGet("accu-language") === "en" ? "en" : "sk");
+    setTheme(storageGet("accu-theme") === "dark");
+  </script>
+</body>
+</html>
